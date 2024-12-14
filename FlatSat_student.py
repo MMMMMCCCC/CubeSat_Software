@@ -76,17 +76,17 @@ def take_photo():
 
         if magnitude > THRESHOLD:  # Check if the threshold is surpassed
             print("Shake detected! Taking photo...")
-            
-            time.sleep(1);
+
+            time.sleep(1)
             name = "MChen"
-            imgname = img_gen(name)
-            
-            # Capture the image
+            imgname = img_gen(name)  # Get image name with timestamp
+
+            # Capture the image at the correct path
             picam2.capture_file(imgname)
             print(f"Photo saved as {imgname}")
-            
-            git_push();
-            time.sleep(1);
+
+            git_push(imgname)  # Pass the image name to the git_push function
+            time.sleep(1)
 
 
 def main():
