@@ -55,7 +55,9 @@ def yaw_gy(prev_angle, delT, gyro):
     #TODO
     yaw = prev_angle + gyro[2] * delT
     return yaw
-
+############################################
+#FINISH THE REST THE STUFF BELOWWWWWWWWWWWWW
+############################################
 #Activity 3: Sensor calibration
 def calibrate_mag():
     #TODO: Set up lists, time, etc
