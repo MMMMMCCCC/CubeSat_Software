@@ -69,8 +69,7 @@ def capture(dir ='roll', target_angle = 30):
             print(f"Image captured and saved as {filename}")
             picam2.stop()
             break
-        
-        
+      time.sleep(0.1)  
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
