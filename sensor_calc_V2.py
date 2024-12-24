@@ -95,6 +95,7 @@ def calibrate_gyro():
     data = []
     
     for i in range(100):
+        gyro = accel_gyro.gyro
         data.append([gyro[0],gyro[1],gyro[2]])
     
     #TODO
