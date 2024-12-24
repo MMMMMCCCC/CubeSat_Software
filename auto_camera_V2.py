@@ -14,7 +14,7 @@ import busio
 from picamera2 import Picamera2
 import numpy as np
 import sys
-from sensor_calc import *
+from sensor_calc_V2 import *
 
 #imu and camera initialization
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -69,7 +69,7 @@ def capture(dir ='roll', target_angle = 30):
             print(f"Image captured and saved as {filename}")
             picam2.stop()
             break
-      time.sleep(0.1)  
+        time.sleep(0.1)
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
