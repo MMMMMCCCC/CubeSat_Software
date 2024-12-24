@@ -108,9 +108,9 @@ def calibrate_gyro():
     offset_y = (max(y) + min(y)) / 2
     offset_z = (max(z) + min(z)) / 2
 
-    corrected_x = magX - offset_x
-    corrected_y = magY - offset_y
-    corrected_z = magZ - offset_z
+    corrected_x = gyro[0] - offset_x
+    corrected_y = gyro[1] - offset_y
+    corrected_z = gyro[2] - offset_z
     
     return [corrected_x, corrected_y, corrected_z]
 
