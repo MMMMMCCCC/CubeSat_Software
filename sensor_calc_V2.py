@@ -36,12 +36,13 @@ def pitch_am(accelX,accelY,accelZ):
     pitch = math.atan(accelX/(math.sqrt((accelY**2)+(accelZ**2))))
     return pitch
 
-def yaw_am(accelX,accelY,accelZ,magX,magY,magZ):
-    #TODO
-    accel_magnitude = math.sqrt(accelX**2 + accelY**2 + accelZ**2)
-    mag_x = magX * accelZ - magZ * accelX
-    mag_y = magY * accelZ - magZ * accelY
-    return (180 / np.pi) * np.arctan2(-mag_y, mag_x)
+def yaw_am(accelX, accelY, accelZ, magX, magY, magZ):
+    pitch = math.atan2(accelX, math.sqrt(accelY**2 + accelZ**2))
+    roll = math.atan2(accelY, math.sqrt(accelX**2 + accelZ**2))
+    mag_x = magX * math.cos(pitch) + magY * math.sin(roll) * math.sin(pitch) + magZ * math.cos(roll) * math.sin(pitch)
+    mag_y = magY * math.cos(roll) - magZ * math.sin(roll)
+    yaw = math.atan2(-mag_y, mag_x)
+    return math.degrees(yaw)
 
 #Activity 2: RPY based on gyroscope
 def roll_gy(prev_angle, delT, gyro):
