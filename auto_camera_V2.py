@@ -14,7 +14,7 @@ import busio
 from picamera2 import Picamera2
 import numpy as np
 import sys
-from sensor_calc_V2 import *
+from sensor_calc_V2 import *  # Ensure that you have the sensor_calc_V2 file
 
 #imu and camera initialization
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -23,50 +23,42 @@ mag = LIS3MDL(i2c)
 picam2 = Picamera2()
 
 #Code to take a picture at a given offset angle
-def capture(dir ='roll', target_angle = 70,margin=5):
+def capture(dir ='roll', target_angle = 70, margin=5):
     #Calibration lines should remain commented out until you implement calibration
     offset_mag = calibrate_mag()
-    offset_gyro =calibrate_gyro()
+    offset_gyro = calibrate_gyro()
     initial_angle = set_initial(offset_mag)
-    prev_angle = initial_angle
+    
     print("Begin moving camera.")
+    
     while True:
         try:
-            print("Starting loop iteration...")
-        
+            # Read sensor data
             accelX, accelY, accelZ = accel_gyro.acceleration
             magX, magY, magZ = mag.magnetic
-        
-        # Calculate roll, pitch, and yaw
+
+            # Calculate roll, pitch, and yaw
             roll = roll_am(accelX, accelY, accelZ)
             pitch = pitch_am(accelX, accelY, accelZ)
             yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
-        
+
             print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
+            
+            # Apply calibration offsets to magnetometer and gyro values
+            magX -= offset_mag[0]
+            magY -= offset_mag[1]
+            magZ -= offset_mag[2]
+            
+            gyroX, gyroY, gyroZ = accel_gyro.gyro
+            gyroX = gyroX * 180 / np.pi - offset_gyro[0]
+            gyroY = gyroY * 180 / np.pi - offset_gyro[1]
+            gyroZ = gyroZ * 180 / np.pi - offset_gyro[2]
         
-            time.sleep(0.1)  # Small delay between iterations
         except Exception as e:
             print(f"Error occurred: {e}")
             break  # Exit the loop if there's an error
-            accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
-            magX, magY, magZ = mag.magnetic #gauss
-        #Calibrate magnetometer readings
-            magX = magX - offset_mag[0]
-            magY = magY - offset_mag[1]
-            magZ = magZ - offset_mag[2]
-            gyroX, gyroY, gyroZ = accel_gyro.gyro #rad/s
-        #Convert to degrees and calibrate
-            gyroX = gyroX *180/np.pi - offset_gyro[0]
-            gyroY = gyroY *180/np.pi - offset_gyro[1]
-            gyroZ = gyroZ *180/np.pi - offset_gyro[2]
-        
-        #TODO: Everything else! Be sure to not take a picture on exactly a
-        #certain angle: give yourself some margin for error.
-        
-        roll = roll_am(accelX, accelY, accelZ)
-        pitch = pitch_am(accelX, accelY, accelZ)
-        yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
-        
+
+        # Choose the direction (roll, pitch, or yaw)
         if dir == 'roll':
             current_angle = roll
         elif dir == 'pitch':
@@ -76,31 +68,33 @@ def capture(dir ='roll', target_angle = 70,margin=5):
         else:
             print("Invalid direction.")
             break
-        
+
+        # Check if the current angle is within the margin of the target angle
         if abs(current_angle - target_angle) <= margin:
-            #create a new directory called Images and then save the new image into that directory
+            # Create a new directory called Images and save the new image there
             directory = "/home/miracle2/CubeSat_Software/Images"
             file = "CapturedIMG.jpg"
             path = os.path.join(directory, file)
             
-            #make the directory if it's not already there
+            # Make the directory if it's not already there
             os.makedirs(directory, exist_ok=True)
             
             print(f"Made new directory called {directory}")
             
-            #code to capture image
+            # Code to capture image
             print("Capturing image...")
-            
-            img = picam2.create_still_configuration()
-            picam2.start(show_preview=True)
-            
-            time.sleep(1)
-            picam2.switch_mode_and_capture_file(img, file)
-            
-            #message to show success
-            print(f"Image captured and saved in {path}")
+
+            # Capture the image with picam2
+            picam2.start()
+            picam2.capture_file(path)  # Capture the image and save it directly to the path
             picam2.stop()
-            break #if image is captured then break out of the loop otherwise keep capturing image
+            
+            # Message to show success
+            print(f"Image captured and saved in {path}")
+            break  # Exit the loop after capturing the image
+        else:
+            # Add a small delay to prevent overloading the CPU
+            time.sleep(0.1)
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
