@@ -101,8 +101,8 @@ def capture(dir ='roll', target_angle = 70,margin=5):
 
         print("Image successfully committed and pushed to GitHub.")
 
-except subprocess.CalledProcessError as e:
-    print(f"Error during Git operation: {e}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during Git operation: {e}")
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
