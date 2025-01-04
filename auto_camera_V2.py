@@ -31,6 +31,23 @@ def capture(dir ='roll', target_angle = 70,margin=5):
     prev_angle = initial_angle
     print("Begin moving camera.")
     while True:
+        try:
+        print("Starting loop iteration...")
+        
+        accelX, accelY, accelZ = accel_gyro.acceleration
+        magX, magY, magZ = mag.magnetic
+        
+        # Calculate roll, pitch, and yaw
+        roll = roll_am(accelX, accelY, accelZ)
+        pitch = pitch_am(accelX, accelY, accelZ)
+        yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
+        
+        print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
+        
+        time.sleep(0.1)  # Small delay between iterations
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        break  # Exit the loop if there's an error
         accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
         magX, magY, magZ = mag.magnetic #gauss
         #Calibrate magnetometer readings
