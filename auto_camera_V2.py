@@ -60,7 +60,7 @@ def capture(dir ='roll', target_angle = 30,margin=5):
             print("Invalid direction.")
             break
         
-        if target_angle - margin <= current_angle <= target_angle + margin:
+        if abs(current_angle - target_angle) <= margin:
             
             #create a new directory called Images and then save the new image into that directory
             directory = "/home/miracle2/CubeSat_Software/Images"
