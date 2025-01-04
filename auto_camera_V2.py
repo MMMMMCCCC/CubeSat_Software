@@ -15,6 +15,7 @@ from picamera2 import Picamera2
 import numpy as np
 import sys
 from sensor_calc_V2 import *
+import subprocess
 
 #imu and camera initialization
 i2c = busio.I2C(board.SCL, board.SDA)
