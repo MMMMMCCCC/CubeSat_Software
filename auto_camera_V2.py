@@ -86,6 +86,23 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             print(f"Image captured and saved.")
             picam2.stop()
             break #if image is captured then break out of the loop otherwise keep capturing image
+    try:
+    # Change to the Git repository directory
+        os.chdir("/home/miracle2/CubeSat_Software")  # Replace with your actual repository path
+
+    # Add the image file to Git
+        subprocess.run(["git", "add", path], check=True)
+
+    # Commit the changes
+        subprocess.run(["git", "commit", "-m", "Add CapturedIMG.jpg"], check=True)
+
+    # Push the changes to GitHub
+        subprocess.run(["git", "push", "origin", "main"], check=True)  # Replace 'main' if you're using a different branch
+
+        print("Image successfully committed and pushed to GitHub.")
+
+except subprocess.CalledProcessError as e:
+    print(f"Error during Git operation: {e}")
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
