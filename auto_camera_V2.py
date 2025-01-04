@@ -77,8 +77,7 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             print("Capturing image...")
             
             img = picam2.create_still_configuration()
-            picam2.start_preview()
-            picam2.start(show_preview=True)
+            picam2.start()
             
             time.sleep(1)
             picam2.switch_mode_and_capture_file(img, file)
