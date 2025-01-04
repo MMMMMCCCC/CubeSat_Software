@@ -32,33 +32,33 @@ def capture(dir ='roll', target_angle = 70,margin=5):
     print("Begin moving camera.")
     while True:
         try:
-        print("Starting loop iteration...")
+            print("Starting loop iteration...")
         
-        accelX, accelY, accelZ = accel_gyro.acceleration
-        magX, magY, magZ = mag.magnetic
+            accelX, accelY, accelZ = accel_gyro.acceleration
+            magX, magY, magZ = mag.magnetic
         
         # Calculate roll, pitch, and yaw
-        roll = roll_am(accelX, accelY, accelZ)
-        pitch = pitch_am(accelX, accelY, accelZ)
-        yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
+            roll = roll_am(accelX, accelY, accelZ)
+            pitch = pitch_am(accelX, accelY, accelZ)
+            yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
         
-        print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
+            print(f"Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
         
-        time.sleep(0.1)  # Small delay between iterations
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        break  # Exit the loop if there's an error
-        accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
-        magX, magY, magZ = mag.magnetic #gauss
+            time.sleep(0.1)  # Small delay between iterations
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            break  # Exit the loop if there's an error
+            accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
+            magX, magY, magZ = mag.magnetic #gauss
         #Calibrate magnetometer readings
-        magX = magX - offset_mag[0]
-        magY = magY - offset_mag[1]
-        magZ = magZ - offset_mag[2]
-        gyroX, gyroY, gyroZ = accel_gyro.gyro #rad/s
+            magX = magX - offset_mag[0]
+            magY = magY - offset_mag[1]
+            magZ = magZ - offset_mag[2]
+            gyroX, gyroY, gyroZ = accel_gyro.gyro #rad/s
         #Convert to degrees and calibrate
-        gyroX = gyroX *180/np.pi - offset_gyro[0]
-        gyroY = gyroY *180/np.pi - offset_gyro[1]
-        gyroZ = gyroZ *180/np.pi - offset_gyro[2]
+            gyroX = gyroX *180/np.pi - offset_gyro[0]
+            gyroY = gyroY *180/np.pi - offset_gyro[1]
+            gyroZ = gyroZ *180/np.pi - offset_gyro[2]
         
         #TODO: Everything else! Be sure to not take a picture on exactly a
         #certain angle: give yourself some margin for error.
