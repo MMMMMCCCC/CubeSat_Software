@@ -81,10 +81,10 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             picam2.start(show_preview=True)
             
             time.sleep(1)
-            picam2.switch_mode_and_capture_file(img, path)
+            picam2.switch_mode_and_capture_file(img, file)
             
             #message to show success
-            print(f"Image captured and saved in {path}")
+            print(f"Image captured and saved.")
             picam2.stop()
             break #if image is captured then break out of the loop otherwise keep capturing image
 
