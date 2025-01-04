@@ -31,7 +31,6 @@ def capture(dir ='roll', target_angle = 30,margin=5):
     prev_angle = initial_angle
     print("Begin moving camera.")
     while True:
-        print("hi")
         accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
         magX, magY, magZ = mag.magnetic #gauss
         #Calibrate magnetometer readings
@@ -62,8 +61,6 @@ def capture(dir ='roll', target_angle = 30,margin=5):
             break
             
         if abs(current_angle - target_angle) <= margin:
-
-            print("hi")
             #create a new directory called Images and then save the new image into that directory
             directory = "/home/miracle2/CubeSat_Software/Images"
             file = "CapturedIMG.jpg"
