@@ -81,7 +81,7 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             picam2.start(show_preview=True)
             
             time.sleep(1)
-            picam2.switch_mode_and_capture_file(img, file)
+            picam2.switch_mode_and_capture_file(img, path)
             
             #message to show success
             print(f"Image captured and saved in {path}")
