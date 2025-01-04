@@ -70,7 +70,7 @@ def calibrate_mag():
     time.sleep(3)
     
     print("Calibrating...")
-    `
+    
     for i in range(100): #collects 100 data values
         magX, magY, magZ = mag.magnetic
         data.append([magX, magY, magZ]) #stores these values in x,y,z format (a list)
