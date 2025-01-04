@@ -1,142 +1,89 @@
 """
-The code you will write for this module should calculate
-roll, pitch, and yaw (RPY) and calibrate your measurements
-for better accuracy. Your functions are split into two activities.
-The first is basic RPY from the accelerometer and magnetometer. The
-second is RPY using the gyroscope. Finally, write the calibration functions.
-Run plot.py to test your functions, this is important because auto_camera.py 
-relies on your sensor functions here.
+The code below is a template for the auto_camera.py file. You will need to
+finish the capture() function to take a picture at a given RPY angle. Make
+sure you have completed the sensor_calc.py file before you begin this one.
 """
 
 #import libraries
-import time
-import numpy as np
+from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
+from adafruit_lis3mdl import LIS3MDL
 import time
 import os
 import board
 import busio
-import math
-from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
-from adafruit_lis3mdl import LIS3MDL
+from picamera2 import Picamera2
+import numpy as np
+import sys
+from sensor_calc_V2 import *
 
-#imu initialization
+#imu and camera initialization
 i2c = busio.I2C(board.SCL, board.SDA)
 accel_gyro = LSM6DS(i2c)
 mag = LIS3MDL(i2c)
+picam2 = Picamera2()
 
+#Code to take a picture at a given offset angle
+def capture(dir ='roll', target_angle = 70,margin=5):
+    #Calibration lines should remain commented out until you implement calibration
+    offset_mag = calibrate_mag()
+    offset_gyro =calibrate_gyro()
+    initial_angle = set_initial(offset_mag)
+    prev_angle = initial_angle
+    print("Begin moving camera.")
+    while True:
+        accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
+        magX, magY, magZ = mag.magnetic #gauss
+        #Calibrate magnetometer readings
+        magX = magX - offset_mag[0]
+        magY = magY - offset_mag[1]
+        magZ = magZ - offset_mag[2]
+        gyroX, gyroY, gyroZ = accel_gyro.gyro #rad/s
+        #Convert to degrees and calibrate
+        gyroX = gyroX *180/np.pi - offset_gyro[0]
+        gyroY = gyroY *180/np.pi - offset_gyro[1]
+        gyroZ = gyroZ *180/np.pi - offset_gyro[2]
+        
+        #TODO: Everything else! Be sure to not take a picture on exactly a
+        #certain angle: give yourself some margin for error.
+        
+        roll = roll_am(accelX, accelY, accelZ)
+        pitch = pitch_am(accelX, accelY, accelZ)
+        yaw = yaw_am(accelX, accelY, accelZ, magX, magY, magZ)
+        
+        if dir == 'roll':
+            current_angle = roll
+        elif dir == 'pitch':
+            current_angle = pitch
+        elif dir == 'yaw':
+            current_angle = yaw
+        else:
+            print("Invalid direction.")
+            break
+        
+        if abs(current_angle - target_angle) <= margin:
+            #create a new directory called Images and then save the new image into that directory
+            directory = "/home/miracle2/CubeSat_Software/Images"
+            file = "CapturedIMG.jpg"
+            path = os.path.join(directory, file)
+            
+            #make the directory if it's not already there
+            os.makedirs(directory, exist_ok=True)
+            
+            print(f"Made new directory called {directory}")
+            
+            #code to capture image
+            print("Capturing image...")
+            
+            img = picam2.create_still_configuration()
+            picam2.start(show_preview=True)
+            
+            time.sleep(1)
+            picam2.switch_mode_and_capture_file(img, file)
+            
+            #message to show success
+            print(f"Image captured and saved in {path}")
+            picam2.stop()
+            break #if image is captured then break out of the loop otherwise keep capturing image
 
-#Activity 1: RPY based on accelerometer and magnetometer
-def roll_am(accelX,accelY,accelZ):
-    #TODO
-    roll = math.atan(accelY/(math.sqrt((accelX**2)+(accelZ**2)))) #writing the given functions in python version
-    return roll
-
-def pitch_am(accelX,accelY,accelZ):
-    #TODO
-    pitch = math.atan(accelX/(math.sqrt((accelY**2)+(accelZ**2))))
-    return pitch
-
-def yaw_am(accelX,accelY,accelZ,magX,magY,magZ):
-    #TODO
-    pitch = pitch_am(accelX,accelY,accelZ) #call the above functions to get the roll and pitch values to be used later
-    roll = roll_am(accelX,accelY,accelZ)
-    
-    mag_x = (magX*math.cos(pitch)) + (magY*math.sin(roll)*math.sin(pitch)) + (magZ*math.cos(roll)*math.sin(pitch)) #used the equations given in the pdf
-    mag_y = (magY*math.cos(roll)) - (magZ*math.sin(roll))
-    
-    return (180/np.pi)*np.arctan2(-mag_y, mag_x)
-
-#Activity 2: RPY based on gyroscope
-def roll_gy(prev_angle, delT, gyro):
-    #TODO
-    roll = prev_angle + (gyro[0] * delT) #previous angle added to the product of the gyro value and the delta
-    return roll
-
-def pitch_gy(prev_angle, delT, gyro):
-    #TODO
-    pitch = prev_angle + gyro[1] * delT
-    return pitch
-def yaw_gy(prev_angle, delT, gyro):
-    #TODO
-    yaw = prev_angle + gyro[2] * delT
-    return yaw
-
-#Activity 3: Sensor calibration
-def calibrate_mag():
-    #TODO: Set up lists, time, etc
-    data = []
-    
-    print("Preparing to calibrate magnetometer. Please wave around.")
-    time.sleep(3)
-    
-    print("Calibrating...")
-    
-    for i in range(100): #collects 100 data values
-        magX, magY, magZ = mag.magnetic
-        data.append([magX, magY, magZ]) #stores these values in x,y,z format (a list)
-    
-    #TODO: Calculate calibration constants
-    print("Calibration complete.")
-    x,y,z = zip(*data)
-    
-    offset_x = (max(x) + min(x)) / 2 #calculating errors and correcting them
-    offset_y = (max(y) + min(y)) / 2
-    offset_z = (max(z) + min(z)) / 2
-
-    corrected_x = magX - offset_x
-    corrected_y = magY - offset_y
-    corrected_z = magZ - offset_z
-    
-    return [corrected_x, corrected_y, corrected_z]
-
-def calibrate_gyro():
-    #TODO
-    print("Preparing to calibrate gyroscope. Put down the board and do not touch it.")
-    time.sleep(3)
-    print("Calibrating...")
-    
-    data = []
-    
-    for i in range(100):
-        data.append([gyro[0],gyro[1],gyro[2]])
-    
-    #TODO
-    print("Calibration complete.")
-    
-    x,y,z = zip(*data)
-    
-    offset_x = (max(x) + min(x)) / 2
-    offset_y = (max(y) + min(y)) / 2
-    offset_z = (max(z) + min(z)) / 2
-
-    corrected_x = magX - offset_x
-    corrected_y = magY - offset_y
-    corrected_z = magZ - offset_z
-    
-    return [corrected_x, corrected_y, corrected_z]
-
-def set_initial(mag_offset = [0,0,0]):
-    """
-    This function is complete. Finds initial RPY values.
-
-    Parameters:
-        mag_offset (list): magnetometer calibration offsets
-    """
-    #Sets the initial position for plotting and gyro calculations.
-    print("Preparing to set initial angle. Please hold the IMU still.")
-    time.sleep(3)
-    print("Setting angle...")
-    accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
-    magX, magY, magZ = mag.magnetic #gauss
-    #Calibrate magnetometer readings. Defaults to zero until you
-    #write the code
-    magX = magX - mag_offset[0]
-    magY = magY - mag_offset[1]
-    magZ = magZ - mag_offset[2]
-    
-    roll = roll_am(accelX, accelY,accelZ)
-    pitch = pitch_am(accelX,accelY,accelZ)
-    yaw = yaw_am(accelX,accelY,accelZ,magX,magY,magZ)
-    
-    print("Initial angle set.")
-    return [roll,pitch,yaw]
+if __name__ == '__main__':
+    capture(*sys.argv[1:])
