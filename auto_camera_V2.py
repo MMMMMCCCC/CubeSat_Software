@@ -59,7 +59,8 @@ def capture(dir ='roll', target_angle = 30,margin=5):
         else:
             print("Invalid direction.")
             break
-        
+
+        print("hi")
         if abs(current_angle - target_angle) <= margin:
 
             print("hi")
