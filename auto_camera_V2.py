@@ -87,23 +87,38 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             print(f"Image captured and saved.")
             picam2.stop()
             break #if image is captured then break out of the loop otherwise keep capturing image
-    try:
-    # Change to the Git repository directory
-        os.chdir("/home/miracle2/CubeSat_Software")  # Replace with your actual repository path
+    # Add the image to Git and push
+try:
+    os.chdir("/home/miracle2/CubeSat_Software")  # Ensure the correct repository path
 
-    # Add the image file to Git
-        subprocess.run(["git", "add", path], check=True)
+    # Generate a unique file name using a timestamp
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    unique_file_name = f"CapturedIMG_{timestamp}.jpg"
+    unique_path = os.path.join(directory, unique_file_name)
 
-    # Commit the changes
-        subprocess.run(["git", "commit", "-m", "Add CapturedIMG.jpg"], check=True)
+    # Rename the file to the unique name
+    os.rename(path, unique_path)  # Renames the file captured earlier
+
+    # Check if the renamed file exists before adding
+    if not os.path.exists(unique_path):
+        print(f"Error: File not found at {unique_path}.")
+        return
+
+    # Add the unique file to Git
+    subprocess.run(["git", "add", unique_path], check=True)
+
+    # Commit the changes with the unique file name
+    subprocess.run(["git", "commit", "-m", f"Add {unique_file_name}"], check=True)
 
     # Push the changes to GitHub
-        subprocess.run(["git", "push", "origin", "main"], check=True)  # Replace 'main' if you're using a different branch
+    subprocess.run(["git", "push", "origin", "main"], check=True)
 
-        print("Image successfully committed and pushed to GitHub.")
+    print(f"Image successfully committed and pushed to GitHub as {unique_file_name}.")
+except subprocess.CalledProcessError as e:
+    print(f"Error during Git operation: {e}")
+except Exception as e:
+    print(f"Unexpected error: {e}")
 
-    except subprocess.CalledProcessError as e:
-        print(f"Error during Git operation: {e}")
 
 if __name__ == '__main__':
     capture(*sys.argv[1:])
