@@ -88,7 +88,6 @@ def capture(dir ='roll', target_angle = 70,margin=5):
             print(f"Image captured and saved.")
             picam2.stop()
             break #if image is captured then break out of the loop otherwise keep capturing image
-    # Add the image to Git and push
 
 
 if __name__ == '__main__':
