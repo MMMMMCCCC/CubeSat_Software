@@ -12,7 +12,7 @@ import math
 import cv2
 from auto_camera_V2 import capture
 
-def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=2.5, fov_m=62):
+def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=5, altitude_m=2.5, fov_m=62):
     """use the image saved by the auto_camera_V2 file
        detect red.orange/yellow sections in the image, that will represent the wildfire
        calculate the area of those sections and get the time interval of each area
