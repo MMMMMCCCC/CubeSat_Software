@@ -32,8 +32,8 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=
         # Call capture function to capture the image
         capture(dir, target_angle, margin)
 
-        # Format the filename correctly using f-string
-        file = f"{dir}/CaptureIMG_{minute:.2f}.jpg"
+        # Construct the filename properly using f-string
+        file = f"CaptureIMG_{minute:.2f}.jpg"
         print(f"Captured file: {file}")
 
         # Check if the file exists before proceeding
@@ -112,4 +112,5 @@ def calc_area(image, img_resolution, altitude_m, fov_m):
 
 if __name__ == "__main__":
     detect_fire()  # Start the fire detection process
+
 
