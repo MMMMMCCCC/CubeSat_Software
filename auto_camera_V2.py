@@ -25,7 +25,7 @@ mag = LIS3MDL(i2c)
 picam2 = Picamera2()
 
 #Code to take a picture at a given offset angle
-def capture(dir ='roll', target_angle = 70,margin=5,filename):
+def capture(filename,dir ='roll', target_angle = 70,margin=5):
     #Calibration lines should remain commented out until you implement calibration
     offset_mag = calibrate_mag()
     offset_gyro =calibrate_gyro()
