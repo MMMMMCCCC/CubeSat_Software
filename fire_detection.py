@@ -37,6 +37,8 @@ def detect_fire(dir='roll',target_angle=70,margin=5,max_cycle=30,altitude_m=2.5,
         time_x.append(minute)
     
     #plotting
+    print(data1)
+    print(data2)
     fig,ax1 = plt.subplots()
     ax1.plot(time_x,m2,color='red',label="Area of Fire in m^2")
     ax1.set_xlabel("Time (mins)")
@@ -49,6 +51,7 @@ def detect_fire(dir='roll',target_angle=70,margin=5,max_cycle=30,altitude_m=2.5,
     ax2.tick_params(axis='y',labelcolor="blue")
 
     plt.savefig("Images/fire_plot.png")
+    print("Plot saved in Images/fire_plot.png")
     
     #other plot setups
     plt.title("Forest Fire Data Collection with Twin Axes")
