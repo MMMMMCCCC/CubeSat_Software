@@ -25,7 +25,7 @@ def detect_fire(dir='roll',target_angle=70,margin=5,max_cycle=30,altitude_m=2.5,
     
     for cycle in range(max_cycle):  #one cycle -> 1 minute
         minute = (time.time() - start_time) / 60
-        capture(dir,target_angle,margin,"CaptureIMG_{minute}.jpg") #call this function to capture the image
+        capture(dir,target_angle,margin) #call this function to capture the image
         
         file = "CaptureIMG_{minute}.jpg"
         
@@ -94,5 +94,7 @@ def calc_area(image,img_resolution,altitude_m,fov_m):
     
     return area_m,area_percent
         
-    
+if __name__ == "__main__":
+    start_time = time.time()  # Set start_time before calling detect_fire
+    detect_fire()    
     
