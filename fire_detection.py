@@ -28,7 +28,7 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=
     for cycle in range(max_cycle):
         minute = (time.time() - start_time) / 60
         file = "CaptureIMG_{minute}.jpg"
-        capture(dir,target_angle,margin,file) #call this function to capture the image
+        capture(file,dir,target_angle,margin) #call this function to capture the image
         
         m2, percent = calc_area(file,(3280,2464),2.5,62) #calculate area of the fire in each image
         time.sleep(1)  # Wait for 1 second to ensure the file is saved before loading
