@@ -22,29 +22,15 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=
     data1 = []  # values for area of fire in m2 
     data2 = []  # values for percentage area
     time_x = []  # time that each value is collected
-    
-    start_time = time.time()  # Start time of the first cycle
 
-    for cycle in range(max_cycle):  # one cycle -> 1 minute
+    for cycle in range(max_cycle):
         minute = (time.time() - start_time) / 60
+        capture(dir,target_angle,margin) #call this function to capture the image
         
-        # Call capture function to capture the image
-        capture(dir, target_angle, margin)
-
-        # Construct the filename properly using f-string
-        file = f"CaptureIMG_{minute}.jpg"
-        print(f"Captured file: {file}")
-
-        # Check if the file exists before proceeding
-        if not os.path.exists(file):
-            print(f"Error: The image file {file} does not exist!")
-            continue  # Skip to the next cycle if the image is not found
-
-        # Add a small delay to ensure the image is fully written before loading
+        file = "CaptureIMG_{minute}.jpg"
+        
+        m2, percent = calc_area(file,(3280,2464),2.5,62) #calculate area of the fire in each image
         time.sleep(1)  # Wait for 1 second to ensure the file is saved before loading
-
-        # Calculate the area of fire and the percentage of area covered
-        m2, percent = calc_area(file, (3280, 2464), 2.5, 62)
 
         # Append the data to the lists
         data1.append(m2)
