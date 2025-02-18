@@ -27,13 +27,12 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=
 
     for cycle in range(max_cycle):  # one cycle -> 1 minute
         minute = (time.time() - start_time) / 60
-        print(f"Capturing image for cycle {cycle}, at minute {minute}")
         
         # Call capture function to capture the image
         capture(dir, target_angle, margin)
 
         # Construct the filename properly using f-string
-        file = f"CaptureIMG_{minute:.2f}.jpg"
+        file = f"CaptureIMG_{minute}.jpg"
         print(f"Captured file: {file}")
 
         # Check if the file exists before proceeding
