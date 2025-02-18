@@ -33,6 +33,8 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=5, altitude_m=2
         m2, percent = calc_area(file,(3280,2464),2.5,62) #calculate area of the fire in each image
         time.sleep(1)  # Wait for 1 second to ensure the file is saved before loading
 
+        print(f"fire area: {m2}, fire percent: {percent}, time: {minute}")
+
         # Append the data to the lists
         data1.append(m2)
         data2.append(percent)
