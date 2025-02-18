@@ -23,6 +23,8 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=30, altitude_m=
     data2 = []  # values for percentage area
     time_x = []  # time that each value is collected
 
+    start_time = time.time()
+
     for cycle in range(max_cycle):
         minute = (time.time() - start_time) / 60
         capture(dir,target_angle,margin) #call this function to capture the image
