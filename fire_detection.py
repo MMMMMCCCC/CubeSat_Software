@@ -7,6 +7,7 @@ import busio
 from picamera2 import Picamera2
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 import math
 import cv2
 from auto_camera_V2 import capture
