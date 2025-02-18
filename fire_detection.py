@@ -47,6 +47,8 @@ def detect_fire(dir='roll',target_angle=70,margin=5,max_cycle=30,altitude_m=2.5,
     ax2.plot(time_x,percent,color='blue',label="Percentage Area Covered")
     ax2.set_ylabel("Area of Fire Percentage Compared to Forest",color="blue")
     ax2.tick_params(axis='y',labelcolor="blue")
+
+    plt.savefig("Images/fire_plot.png")
     
     #other plot setups
     plt.title("Forest Fire Data Collection with Twin Axes")
