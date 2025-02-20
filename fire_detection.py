@@ -91,7 +91,7 @@ def calc_area(image, img_resolution, altitude_m, fov_m):
         
     fov_rad = math.radians(fov_m)  
     fov_width_m = 2 * altitude_m * math.tan(fov_rad / 2)  
-    GSD = fov_width_m / width_px
+    GSD = fov_width_m / width
         
     area_m = region * (GSD**2)  # Convert area to meters squared
     
