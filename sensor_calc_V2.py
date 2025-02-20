@@ -72,7 +72,6 @@ def calibrate_mag():
         data.append([magX, magY, magZ]) #stores these values in x,y,z format (a list)
     
     #TODO: Calculate calibration constants
-    print("Magnetometer calibration complete.")
     x,y,z = zip(*data)
     
     offset_x = (max(x) + min(x)) / 2 #calculating errors and correcting them
@@ -96,7 +95,6 @@ def calibrate_gyro():
         data.append([gyro[0],gyro[1],gyro[2]])
     
     #TODO
-    print("Gyroscope calibration complete.")
     
     x,y,z = zip(*data)
     
