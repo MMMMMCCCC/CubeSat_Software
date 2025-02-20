@@ -31,7 +31,6 @@ def capture(filename,dir ='roll', target_angle = 70,margin=5):
     offset_gyro =calibrate_gyro()
     initial_angle = set_initial(offset_mag)
     prev_angle = initial_angle
-    print("Begin moving camera.")
     while True:
         accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
         magX, magY, magZ = mag.magnetic #gauss
