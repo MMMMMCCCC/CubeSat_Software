@@ -89,11 +89,11 @@ def calc_area(image, img_resolution, altitude_m, fov_m):
 
     width, height = img_resolution  # For calculating actual area of fire
         
-    rad = math.radians(fov_m)  # Convert it to radians to be used in calculations
-    fov = 2 * (altitude_m * math.tan(rad / 2))  # Field of view
-    GSD = (altitude_m * width) / fov  # Find GSD based on FOV
+    fov_rad = math.radians(fov_m)  
+    fov_width_m = 2 * altitude_m * math.tan(fov_rad / 2)  
+    GSD = fov_width_m / width_px
         
-    area_m = region * (GSD)**2  # Convert area to meters squared
+    area_m = region * (GSD**2)  # Convert area to meters squared
     
     return area_m, area_percent
 
