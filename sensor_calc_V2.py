@@ -65,18 +65,14 @@ def yaw_gy(prev_angle, delT, gyro):
 def calibrate_mag():
     #TODO: Set up lists, time, etc
     data = []
-    
-    print("Preparing to calibrate magnetometer. Please wave around.")
     time.sleep(3)
-    
-    print("Calibrating...")
     
     for i in range(100): #collects 100 data values
         magX, magY, magZ = mag.magnetic
         data.append([magX, magY, magZ]) #stores these values in x,y,z format (a list)
     
     #TODO: Calculate calibration constants
-    print("Calibration complete.")
+    print("Magnetometer calibration complete.")
     x,y,z = zip(*data)
     
     offset_x = (max(x) + min(x)) / 2 #calculating errors and correcting them
@@ -91,9 +87,7 @@ def calibrate_mag():
 
 def calibrate_gyro():
     #TODO
-    print("Preparing to calibrate gyroscope. Put down the board and do not touch it.")
     time.sleep(3)
-    print("Calibrating...")
     
     data = []
     
@@ -102,7 +96,7 @@ def calibrate_gyro():
         data.append([gyro[0],gyro[1],gyro[2]])
     
     #TODO
-    print("Calibration complete.")
+    print("Gyroscope calibration complete.")
     
     x,y,z = zip(*data)
     
@@ -124,9 +118,7 @@ def set_initial(mag_offset = [0,0,0]):
         mag_offset (list): magnetometer calibration offsets
     """
     #Sets the initial position for plotting and gyro calculations.
-    print("Preparing to set initial angle. Please hold the IMU still.")
     time.sleep(3)
-    print("Setting angle...")
     accelX, accelY, accelZ = accel_gyro.acceleration #m/s^2
     magX, magY, magZ = mag.magnetic #gauss
     #Calibrate magnetometer readings. Defaults to zero until you
@@ -138,6 +130,5 @@ def set_initial(mag_offset = [0,0,0]):
     roll = roll_am(accelX, accelY,accelZ)
     pitch = pitch_am(accelX,accelY,accelZ)
     yaw = yaw_am(accelX,accelY,accelZ,magX,magY,magZ)
-    
-    print("Initial angle set.")
+
     return [roll,pitch,yaw]
