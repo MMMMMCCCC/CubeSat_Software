@@ -47,6 +47,7 @@ def detect_fire(dir='roll', target_angle=70, margin=5, max_cycle=5, altitude_m=1
     ax1.set_xlabel("Time (mins)")
     ax1.set_ylabel("Area of Fire in m^2", color="red")
     ax1.tick_params(axis='y', labelcolor="red")
+    ax1.set_ylim(0, 50)
     
     ax2 = ax1.twinx()  # Using the same plot but different line graphs
     ax2.plot(time_x, data2, color='blue', label="Percentage Area Covered")
